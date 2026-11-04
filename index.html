@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="vi" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinguaHub - Học Ngoại Ngữ Đa Ngôn Ngữ Phân Cấp</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans min-h-screen flex flex-col antialiased transition-colors duration-300">
+
+    <div class="flex-1 flex flex-col md:flex-row max-w-[1600px] w-full mx-auto">
+        
+        <!-- SIDEBAR BÊN TRÁI -->
+        <aside class="w-full md:w-80 bg-white dark:bg-slate-800 border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-700/80 flex flex-col justify-between p-4 md:p-5 shrink-0 transition-colors duration-300">
+            <div class="space-y-4">
+                <!-- Logo & Brand -->
+                <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-700/60">
+                    <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('vocab')">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+                            <i class="ph-bold ph-translate text-2xl"></i>
+                        </div>
+                        <div>
+                            <span class="text-xl font-extrabold bg-gradient-to-r from-indigo-600 to-violet-500 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">LinguaHub</span>
+                            <span class="block text-[10px] uppercase tracking-wider text-slate-400 font-bold">Học Ngoại Ngữ Phân Cấp</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NÚT ĐĂNG NHẬP GOOGLE CỐ ĐỊNH Ở SIDEBAR (VỊ TRÍ NỔI BẬT NHẤT) -->
+                <div class="p-3 bg-gradient-to-br from-slate-100 to-indigo-50/50 dark:from-slate-700/60 dark:to-indigo-950/30 rounded-2xl border border-indigo-100 dark:border-slate-700 shadow-sm">
+                    <div id="sidebar-auth-logged-out" class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center space-x-1">
+                                <i class="ph-bold ph-user-circle"></i>
+                                <span>Tài khoản học tập</span>
+                            </span>
+                            <span class="text-[10px] bg-indigo-100 dark:bg-indigo-900/60 text-indigo-600 dark:text-indigo-400 font-extrabold px-1.5 py-0.5 rounded">MIỄN PHÍ</span>
+                        </div>
+                        <button onclick="handleGoogleLogin()" class="w-full py-2.5 px-3 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl shadow-md border border-slate-200/80 flex items-center justify-center space-x-2.5 transition-transform active:scale-95 cursor-pointer">
+                            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                            </svg>
+                            <span>Đăng nhập bằng Google</span>
+                        </button>
+                    </div>
+
+                    <div id="sidebar-auth-logged-in" class="hidden flex items-center justify-between">
+                        <div class="flex items-center space-x-2.5 overflow-hidden">
+                            <img id="sidebar-user-avatar" src="" alt="Avatar" class="w-9 h-9 rounded-full border-2 border-indigo-500 shrink-0">
+                            <div class="overflow-hidden">
+                                <h4 id="sidebar-user-name" class="text-xs font-bold text-slate-800 dark:text-slate-100 truncate">--</h4>
+                                <p id="sidebar-user-email" class="text-[10px] text-slate-500 dark:text-slate-400 truncate">--</p>
+                            </div>
+                        </div>
+                        <button onclick="handleLogout()" class="p-2 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/50 rounded-xl transition-all" title="Đăng xuất">
+                            <i class="ph-bold ph-sign-out text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mục Chọn Ngôn Ngữ & Trình Độ -->
+                <div class="space-y-2">
+                    <label class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-1 flex items-center space-x-1.5">
+                        <i class="ph-bold ph-tree-structure"></i>
+                        <span>Ngôn ngữ & Trình độ học</span>
+                    </label>
+                    
+                    <div class="space-y-2 overflow-y-auto max-h-[calc(100vh-320px)] pr-1 custom-scrollbar" id="sidebar-languages">
+                        <!-- Render Dynamic Language & Level Accordion -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Sidebar: Theme Toggle -->
+            <div class="pt-3 mt-3 border-t border-slate-100 dark:border-slate-700/60">
+                <button onclick="toggleTheme()" class="w-full p-3 rounded-2xl bg-slate-100 dark:bg-slate-700/70 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-sm flex items-center justify-between transition-all">
+                    <div class="flex items-center space-x-2.5">
+                        <i id="theme-icon" class="ph-bold ph-moon-stars text-xl text-indigo-500"></i>
+                        <span id="theme-text">Giao diện Tối</span>
+                    </div>
+                    <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-600 text-slate-600 dark:text-slate-300 uppercase font-extrabold" id="theme-badge">OFF</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+
+            <!-- HEADER BANNER & QUICK LEVEL SWITCHER -->
+            <div class="mb-6 space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-indigo-900 to-slate-900 dark:from-slate-800 dark:to-slate-950 p-5 rounded-3xl text-white shadow-lg relative overflow-hidden">
+                    <div class="space-y-1 relative z-10">
+                        <div class="flex items-center space-x-2">
+                            <span id="header-flag" class="text-2xl">🇯🇵</span>
+                            <span id="header-lang-title" class="text-xs font-bold uppercase tracking-wider text-indigo-300">Tiếng Nhật (日本語)</span>
+                        </div>
+                        <h1 id="header-level-name" class="text-2xl sm:text-3xl font-extrabold tracking-tight">Trình độ JLPT N5 (Sơ cấp 1)</h1>
+                    </div>
+                    
+                    <!-- Top Auth & Tabs -->
+                    <div class="flex flex-wrap items-center gap-2 z-10">
+                        <!-- Quick Auth Header -->
+                        <div id="header-auth-btn" class="sm:border-r border-white/10 pr-2">
+                            <button onclick="handleGoogleLogin()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/20 flex items-center space-x-2 transition-all">
+                                <i class="ph-bold ph-google-logo text-sm text-amber-400"></i>
+                                <span>Đăng nhập</span>
+                            </button>
+                        </div>
+
+                        <!-- Quick Tabs Header -->
+                        <div class="flex items-center space-x-1.5 bg-white/10 backdrop-blur-md p-1.5 rounded-2xl border border-white/10" id="top-type-tabs">
+                            <button onclick="switchTab('vocab')" id="top-tab-vocab" class="px-3.5 py-2 rounded-xl text-xs font-bold flex items-center space-x-1.5 transition-all bg-white text-slate-900 shadow-sm">
+                                <i class="ph-bold ph-cards text-sm"></i>
+                                <span>Từ Vựng</span>
+                            </button>
+                            <button onclick="switchTab('grammar')" id="top-tab-grammar" class="px-3.5 py-2 rounded-xl text-xs font-bold flex items-center space-x-1.5 transition-all text-white/80 hover:bg-white/10">
+                                <i class="ph-bold ph-book-open text-sm"></i>
+                                <span>Ngữ Pháp</span>
+                            </button>
+                            <button onclick="switchTab('quiz')" id="top-tab-quiz" class="px-3.5 py-2 rounded-xl text-xs font-bold flex items-center space-x-1.5 transition-all text-white/80 hover:bg-white/10">
+                                <i class="ph-bold ph-brain text-sm"></i>
+                                <span>Kiểm Tra Quiz</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Levels Bar -->
+                <div class="flex items-center space-x-2 overflow-x-auto pb-2 custom-scrollbar" id="level-pills-bar">
+                    <!-- Dynamic level pills -->
+                </div>
+            </div>
+
+            <!-- 1. VOCABULARY SECTION -->
+            <section id="section-vocab" class="space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-700 pb-4">
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white" id="vocab-title">Thẻ Từ Vựng</h2>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm mt-0.5">Nhấn thẻ để lật xem ví dụ. Bấm biểu tượng loa để nghe phát âm chuẩn.</p>
+                    </div>
+                    <!-- Progress & Counter -->
+                    <div class="flex items-center space-x-3 bg-white dark:bg-slate-800 px-4 py-2 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 w-fit">
+                        <span class="text-xs font-semibold text-slate-400">Tiến độ</span>
+                        <span id="vocab-counter" class="text-sm font-bold text-indigo-600 dark:text-indigo-400">1 / 5</span>
+                    </div>
+                </div>
+
+                <!-- Flashcard Display Area -->
+                <div class="max-w-xl mx-auto my-6">
+                    <div class="perspective-1000 w-full h-[360px] cursor-pointer" onclick="flipCard()">
+                        <div id="flashcard" class="relative w-full h-full duration-500 transform-style-3d shadow-xl rounded-3xl">
+                            
+                            <!-- Front Face -->
+                            <div class="absolute inset-0 w-full h-full bg-white dark:bg-slate-800 rounded-3xl p-8 flex flex-col justify-between backface-hidden border-2 border-slate-200/80 dark:border-slate-700">
+                                <div class="flex justify-between items-start">
+                                    <span id="card-tag" class="px-3.5 py-1 rounded-full text-xs font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/50">
+                                        N5
+                                    </span>
+                                    <button onclick="event.stopPropagation(); speakCurrentWord()" class="w-11 h-11 rounded-2xl bg-slate-100 dark:bg-slate-700 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center transition-transform active:scale-95 shadow-sm" title="Nghe phát âm">
+                                        <i class="ph-bold ph-speaker-high text-xl"></i>
+                                    </button>
+                                </div>
+
+                                <div class="text-center my-auto space-y-2">
+                                    <h3 id="card-word" class="text-4xl sm:text-5xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
+                                        こんにちは
+                                    </h3>
+                                    <p id="card-reading" class="text-lg text-slate-500 dark:text-slate-400 font-medium">
+                                        Konnichiwa
+                                    </p>
+                                    <p id="card-meaning" class="text-xl font-bold text-indigo-600 dark:text-indigo-400 mt-2">
+                                        Xin chào (ban ngày)
+                                    </p>
+                                </div>
+
+                                <div class="text-center text-xs font-medium text-slate-400 flex items-center justify-center space-x-1.5">
+                                    <i class="ph-bold ph-arrows-counter-clockwise text-sm"></i>
+                                    <span>Nhấn vào thẻ để xem câu ví dụ</span>
+                                </div>
+                            </div>
+
+                            <!-- Back Face -->
+                            <div class="absolute inset-0 w-full h-full bg-slate-900 dark:bg-slate-950 text-white rounded-3xl p-8 flex flex-col justify-between backface-hidden rotate-y-180 border-2 border-slate-700 shadow-2xl">
+                                <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Ví dụ minh họa</span>
+                                    <button onclick="event.stopPropagation(); speakExample()" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center transition-transform active:scale-95">
+                                        <i class="ph-bold ph-speaker-high text-lg"></i>
+                                    </button>
+                                </div>
+
+                                <div class="my-auto space-y-3 text-center">
+                                    <p id="card-example-orig" class="text-xl font-semibold leading-relaxed text-slate-100">
+                                        こんにちは、元気ですか？
+                                    </p>
+                                    <p id="card-example-trans" class="text-sm text-slate-400 font-normal italic">
+                                        "Xin chào, bạn có khỏe không?"
+                                    </p>
+                                </div>
+
+                                <div class="text-center text-xs font-medium text-slate-400 flex items-center justify-center space-x-1.5">
+                                    <i class="ph-bold ph-arrows-counter-clockwise text-sm"></i>
+                                    <span>Nhấn để quay lại mặt trước</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="flex items-center justify-between mt-6 max-w-sm mx-auto px-2">
+                        <button onclick="prevCard()" class="flex items-center space-x-2 px-5 py-3 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-sm active:scale-95">
+                            <i class="ph-bold ph-caret-left text-lg"></i>
+                            <span>Trước</span>
+                        </button>
+                        
+                        <button onclick="nextCard()" class="flex items-center space-x-2 px-5 py-3 rounded-2xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 transition-all shadow-md shadow-indigo-500/20 active:scale-95">
+                            <span>Tiếp theo</span>
+                            <i class="ph-bold ph-caret-right text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. GRAMMAR SECTION -->
+            <section id="section-grammar" class="hidden space-y-6">
+                <div class="border-b border-slate-200 dark:border-slate-700 pb-4">
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white" id="grammar-title">Bài Học Ngữ Pháp</h2>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm mt-0.5">Cấu trúc ngữ pháp tương ứng trình độ hiện tại kèm ví dụ dễ hiểu.</p>
+                </div>
+
+                <div id="grammar-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Dynamic Items -->
+                </div>
+            </section>
+
+            <!-- 3. QUIZ SECTION -->
+            <section id="section-quiz" class="hidden space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-700 pb-4">
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white" id="quiz-title">Kiểm Tra Trắc Nghiệm</h2>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm mt-0.5">Ôn luyện kiến thức bài học của cấp độ đã chọn.</p>
+                    </div>
+                    <div class="flex items-center space-x-4 bg-white dark:bg-slate-800 px-4 py-2 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm w-fit">
+                        <div class="text-xs font-semibold text-slate-400">Điểm: <span id="quiz-score-val" class="text-sm font-extrabold text-indigo-600 dark:text-indigo-400">0</span></div>
+                        <div class="h-4 w-px bg-slate-200 dark:bg-slate-700"></div>
+                        <div class="text-xs font-semibold text-slate-400">Câu: <span id="quiz-progress-val" class="text-sm font-bold text-slate-700 dark:text-slate-200">1/3</span></div>
+                    </div>
+                </div>
+
+                <!-- Quiz Card -->
+                <div id="quiz-card-container" class="max-w-2xl mx-auto bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700 shadow-xl space-y-6">
+                    <div class="space-y-2">
+                        <span id="quiz-q-tag" class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-3 py-1 rounded-full border border-indigo-100 dark:border-indigo-900/50">Câu hỏi</span>
+                        <h3 id="quiz-question" class="text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100 leading-snug">
+                            <!-- Loaded dynamically -->
+                        </h3>
+                    </div>
+
+                    <!-- Options -->
+                    <div id="quiz-options" class="grid grid-cols-1 gap-3.5 pt-2">
+                        <!-- Dynamic Options -->
+                    </div>
+
+                    <!-- Feedback & Next Action -->
+                    <div id="quiz-feedback" class="hidden p-4 rounded-2xl flex items-center justify-between transition-all">
+                        <div class="flex items-center space-x-3">
+                            <i id="quiz-feedback-icon" class="text-2xl"></i>
+                            <span id="quiz-feedback-text" class="font-bold text-sm"></span>
+                        </div>
+                        <button onclick="nextQuizQuestion()" class="px-5 py-2.5 bg-slate-900 dark:bg-indigo-600 text-white rounded-xl text-sm font-bold hover:bg-slate-800 dark:hover:bg-indigo-700 transition-all shadow-md">
+                            Câu tiếp theo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quiz End State -->
+                <div id="quiz-result-container" class="hidden max-w-md mx-auto bg-white dark:bg-slate-800 rounded-3xl p-8 border border-slate-200 dark:border-slate-700 shadow-xl text-center space-y-6">
+                    <div class="w-20 h-20 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 rounded-full flex items-center justify-center mx-auto text-4xl shadow-inner border border-indigo-100 dark:border-indigo-900/50">
+                        <i class="ph-bold ph-trophy"></i>
+                    </div>
+                    <div class="space-y-2">
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Hoàn thành bài kiểm tra!</h3>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm">Bạn đã hoàn thành bài quiz của trình độ này.</p>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-700/60">
+                        <span class="text-xs text-slate-400 font-bold uppercase">Tổng số điểm thu được</span>
+                        <p id="quiz-final-score" class="text-4xl font-extrabold text-indigo-600 dark:text-indigo-400 mt-1">0 / 3</p>
+                    </div>
+                    <button onclick="resetQuiz()" class="w-full py-3.5 bg-indigo-600 text-white font-bold rounded-2xl shadow-lg shadow-indigo-500/20 hover:bg-indigo-700 transition-all">
+                        Làm lại bài test
+                    </button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Script Application Logic -->
+    <script>
+        // Structure of Languages with Multi-Level Hierarchy
+        const LANGUAGES_CONFIG = [
+            {
+                id: 'jp',
+                name: 'Tiếng Nhật',
+                flag: '🇯🇵',
+                langCode: 'ja-JP',
+                levels: [
+                    { id: 'n5', name: 'JLPT N5', desc: 'Sơ cấp 1' },
+                    { id: 'n4', name: 'JLPT N4', desc: 'Sơ cấp 2' },
+                    { id: 'n3', name: 'JLPT N3', desc: 'Trung cấp' },
+                    { id: 'n2', name: 'JLPT N2', desc: 'Cao cấp' },
+                    { id: 'n1', name: 'JLPT N1', desc: 'Thành thạo' }
+                ]
+            },
+            {
+                id: 'en',
+                name: 'Tiếng Anh',
+                flag: '🇬🇧',
+                langCode: 'en-US',
+                levels: [
+                    { id: 'a1', name: 'CEFR A1', desc: 'Căn bản' },
+                    { id: 'a2', name: 'CEFR A2', desc: 'Sơ cấp' },
+                    { id: 'b1', name: 'CEFR B1', desc: 'Trung cấp' },
+                    { id: 'b2', name: 'CEFR B2', desc: 'Trung cao' },
+                    { id: 'c1', name: 'CEFR C1', desc: 'Cao cấp' },
+                    { id: 'c2', name: 'CEFR C2', desc: 'Thành thạo' }
+                ]
+            },
+            {
+                id: 'zh',
+                name: 'Tiếng Trung',
+                flag: '🇨🇳',
+                langCode: 'zh-CN',
+                levels: [
+                    { id: 'hsk1', name: 'HSK 1', desc: 'Cơ bản 1' },
+                    { id: 'hsk2', name: 'HSK 2', desc: 'Cơ bản 2' },
+                    { id: 'hsk3', name: 'HSK 3', desc: 'Sơ trung cấp' },
+                    { id: 'hsk4', name: 'HSK 4', desc: 'Trung cấp' },
+                    { id: 'hsk5', name: 'HSK 5', desc: 'Cao cấp' },
+                    { id: 'hsk6', name: 'HSK 6', desc: 'Thành thạo' }
+                ]
+            }
+        ];
+
+        // Comprehensive Structured Curriculum Database
+        const CURRICULUM = {
+            jp: {
+                n5: {
+                    vocab: [
+                        { word: "こんにちは", reading: "Konnichiwa", meaning: "Xin chào (ban ngày)", exampleOrig: "こんにちは、お元気ですか？", exampleTrans: "Xin chào, bạn có khỏe không?", tag: "N5" },
+                        { word: "私", reading: "Watashi", meaning: "Tôi", exampleOrig: "私は学生です。", exampleTrans: "Tôi là học sinh.", tag: "N5" },
+                        { word: "食べる", reading: "Taberu", meaning: "Ăn", exampleOrig: "朝ご飯を食べます。", exampleTrans: "Tôi ăn bữa sáng.", tag: "N5" }
+                    ],
+                    grammar: [
+                        { title: "Cấu trúc N1 は N2 です", structure: "N1 は N2 です", explanation: "Khẳng định N1 là N2 (Trợ từ は đọc là wa).", example: "私はベトナム人です。(Tôi là người Việt Nam.)" },
+                        { title: "Thủ định N1 は N2 ではありません", structure: "N1 は N2 ではありません", explanation: "Phủ định N1 không phải là N2.", example: "彼はお医者さんではありません。(Anh ấy không phải là bác sĩ.)" }
+                    ],
+                    quiz: [
+                        { question: "Từ 'こんにちは' có nghĩa là gì?", options: ["Tạm biệt", "Xin chào", "Cảm ơn", "Xin lỗi"], answer: 1 },
+                        { question: "Đâu là trợ từ biểu thị chủ ngữ trong câu đơn giản?", options: ["を", "に", "は", "で"], answer: 2 },
+                        { question: "Dạng phủ định của 'です' là gì?", options: ["でした", "ではありません", "ます", "ません"], answer: 1 }
+                    ]
+                },
+                n4: {
+                    vocab: [
+                        { word: "約束", reading: "Yakusoku", meaning: "Lời hứa, cuộc hẹn", exampleOrig: "友達と約束があります。", exampleTrans: "Tôi có cuộc hẹn với bạn.", tag: "N4" },
+                        { word: "手伝う", reading: "Tetsudau", meaning: "Giúp đỡ", exampleOrig: "仕事を手伝ってください。", exampleTrans: "Hãy giúp tôi một tay.", tag: "N4" }
+                    ],
+                    grammar: [
+                        { title: "Cấu trúc V-て ください", structure: "V-て + ください", explanation: "Yêu cầu hoặc nhờ ai đó làm gì một cách lịch sự.", example: "ここに名前を書いてください。(Hãy viết tên vào đây.)" }
+                    ],
+                    quiz: [
+                        { question: "'約束' (Yakusoku) có nghĩa là gì?", options: ["Quà tặng", "Lời hứa / Cuộc hẹn", "Kế hoạch", "Công việc"], answer: 1 }
+                    ]
+                },
+                n3: {
+                    vocab: [
+                        { word: "複雑", reading: "Fukuzatsu", meaning: "Phức tạp", exampleOrig: "この問題は複雑です。", exampleTrans: "Vấn đề này rất phức tạp.", tag: "N3" }
+                    ],
+                    grammar: [
+                        { title: "Cấu trúc ～といわれている", structure: "S + といわれている", explanation: "Được cho là / Được người ta nói rằng...", example: "納豆は体に良いといわれている。(Natto được cho là tốt cho cơ thể.)" }
+                    ],
+                    quiz: [
+                        { question: "Từ '複雑' mang nghĩa gì?", options: ["Đơn giản", "Phức tạp", "Nhanh chóng", "Khó khăn"], answer: 1 }
+                    ]
+                },
+                n2: {
+                    vocab: [
+                        { word: "貢献", reading: "Kouken", meaning: "Cống hiến, đóng góp", exampleOrig: "社会に貢献したい。", exampleTrans: "Tôi muốn cống hiến cho xã hội.", tag: "N2" }
+                    ],
+                    grammar: [
+                        { title: "Cấu trúc ～にほかならない", structure: "N / V + にほかならない", explanation: "Chính là / Không gì khác ngoài...", example: "合格したのは彼の努力の結果にほかならない。(Thi đỗ chính là nhờ sự nỗ lực của anh ấy.)" }
+                    ],
+                    quiz: [
+                        { question: "Từ '貢献' (Kouken) nghĩa là gì?", options: ["Cống hiến", "Đầu tư", "Phát triển", "Nghiên cứu"], answer: 0 }
+                    ]
+                },
+                n1: {
+                    vocab: [
+                        { word: "圧倒的", reading: "Attouteki", meaning: "Áp đảo, vượt trội", exampleOrig: "圧倒的な強さで勝利した。", exampleTrans: "Chiến thắng nhờ sức mạnh áp đảo.", tag: "N1" }
+                    ],
+                    grammar: [
+                        { title: "Cấu trúc ～たるもの", structure: "N + たるもの", explanation: "Đã là... thì phải (thể hiện tư cách, trách nhiệm).", example: "指導者たるものは常に忍耐性が必要だ。(Đã là nhà lãnh đạo thì phải kiên nhẫn.)" }
+                    ],
+                    quiz: [
+                        { question: "Từ '圧倒的' có nghĩa là:", options: ["Yếu ớt", "Tương đương", "Áp đảo", "Bình thường"], answer: 2 }
+                    ]
+                }
+            },
+            en: {
+                a1: {
+                    vocab: [
+                        { word: "Hello", reading: "/həˈloʊ/", meaning: "Xin chào", exampleOrig: "Hello! Nice to meet you.", exampleTrans: "Xin chào! Rất vui được gặp bạn.", tag: "A1" },
+                        { word: "Book", reading: "/bʊk/", meaning: "Quyển sách", exampleOrig: "I am reading a book.", exampleTrans: "Tôi đang đọc một quyển sách.", tag: "A1" }
+                    ],
+                    grammar: [
+                        { title: "Động từ To Be (am/is/are)", structure: "S + am/is/are + N/Adj", explanation: "Dùng để thì, là, ở trong thì hiện tại đơn.", example: "She is a teacher. (Cô ấy là một giáo viên.)" }
+                    ],
+                    quiz: [
+                        { question: "Từ nào nghĩa là 'Quyển sách'?", options: ["Pen", "Book", "Chair", "Table"], answer: 1 }
+                    ]
+                },
+                a2: {
+                    vocab: [
+                        { word: "Travel", reading: "/ˈtræv.əl/", meaning: "Du lịch", exampleOrig: "I love to travel around the world.", exampleTrans: "Tôi thích đi du lịch quanh thế giới.", tag: "A2" }
+                    ],
+                    grammar: [
+                        { title: "Thì Quá khứ đơn (Past Simple)", structure: "S + V2/ed", explanation: "Diễn tả hành động đã xảy ra và kết thúc trong quá khứ.", example: "We visited London last summer." }
+                    ],
+                    quiz: [
+                        { question: "Quá khứ của động từ 'Go' là gì?", options: ["Goed", "Gone", "Went", "Going"], answer: 2 }
+                    ]
+                },
+                b1: {
+                    vocab: [
+                        { word: "Opportunity", reading: "/ˌɑː.pɚˈtuː.nə.t̬i/", meaning: "Cơ hội", exampleOrig: "Don't miss this great opportunity.", exampleTrans: "Đừng bỏ lỡ cơ hội tuyệt vời này.", tag: "B1" }
+                    ],
+                    grammar: [
+                        { title: "Thì Hiện tại hoàn thành", structure: "S + have/has + V3/ed", explanation: "Bắt đầu trong quá khứ và còn liên quan tới hiện tại.", example: "I have lived here for 3 years." }
+                    ],
+                    quiz: [
+                        { question: "'Opportunity' có nghĩa là:", options: ["Thách thức", "Cơ hội", "Mục tiêu", "Kết quả"], answer: 1 }
+                    ]
+                },
+                b2: {
+                    vocab: [
+                        { word: "Resilient", reading: "/rɪˈzɪl.jənt/", meaning: "Kiên cường, phục hồi nhanh", exampleOrig: "She is a resilient person who never gives up.", exampleTrans: "Cô ấy là một người kiên cường không bao giờ bỏ cuộc.", tag: "B2" }
+                    ],
+                    grammar: [
+                        { title: "Câu điều kiện loại 2", structure: "If + S + V2/ed, S + would/could + V-inf", explanation: "Giả định trái ngược với hiện tại.", example: "If I were rich, I would buy a boat." }
+                    ],
+                    quiz: [
+                        { question: "Từ nào đồng nghĩa với 'Resilient'?", options: ["Weak", "Strong & adaptable", "Fragile", "Slow"], answer: 1 }
+                    ]
+                },
+                c1: {
+                    vocab: [
+                        { word: "Meticulous", reading: "/məˈtɪk.jə.ləs/", meaning: "Tỉ mỉ, cẩn trọng", exampleOrig: "He is meticulous in his research work.", exampleTrans: "Anh ấy rất tỉ mỉ trong nghiên cứu.", tag: "C1" }
+                    ],
+                    grammar: [
+                        { title: "Đảo ngữ (Inversion)", structure: "Negative Adverb + Aux + S + V", explanation: "Nhấn mạnh bằng từ phủ định ở đầu câu.", example: "Never have I seen such a beautiful view." }
+                    ],
+                    quiz: [
+                        { question: "'Meticulous' có nghĩa là:", options: ["Tỉ mỉ, cẩn thận", "Cẩu thả", "Vội vã", "Lười biếng"], answer: 0 }
+                    ]
+                },
+                c2: {
+                    vocab: [
+                        { word: "Ubiquitous", reading: "/juːˈbɪk.wə.t̬əs/", meaning: "Có mặt ở khắp nơi", exampleOrig: "Smartphones have become ubiquitous.", exampleTrans: "Smartphone xuất hiện khắp nơi.", tag: "C2" }
+                    ],
+                    grammar: [
+                        { title: "Absolute Phrase", structure: "Noun + Participle, S + V", explanation: "Rút gọn mệnh đề phụ độc lập.", example: "Weather permitting, we will leave." }
+                    ],
+                    quiz: [
+                        { question: "Từ đồng nghĩa với 'Ubiquitous' là:", options: ["Rare", "Omnipresent", "Hidden", "Unique"], answer: 1 }
+                    ]
+                }
+            },
+            zh: {
+                hsk1: {
+                    vocab: [
+                        { word: "你好", reading: "Nǐ hǎo", meaning: "Xin chào", exampleOrig: "你好！很高兴认识你。", exampleTrans: "Xin chào! Rất vui được biết bạn.", tag: "HSK 1" },
+                        { word: "谢谢", reading: "Xièxie", meaning: "Cảm ơn", exampleOrig: "非常谢谢你的帮助。", exampleTrans: "Rất cảm ơn sự giúp đỡ của bạn.", tag: "HSK 1" }
+                    ],
+                    grammar: [
+                        { title: "Cấu trúc với 是 (Shì)", structure: "Chủ ngữ + 是 + Thành phần bổ nghĩa", explanation: "Khẳng định A là B.", example: "我是学生。(Tôi là học sinh.)" }
+                    ],
+                    quiz: [
+                        { question: "Pinyin của '你好' là gì?", options: ["Xièxie", "Nǐ hǎo", "Zàijiàn", "Duìbuqǐ"], answer: 1 }
+                    ]
+                },
+                hsk2: {
+                    vocab: [
+                        { word: "旅游", reading: "Lǚyóu", meaning: "Du lịch", exampleOrig: "我喜欢去中国旅游。", exampleTrans: "Tôi thích đi du lịch Trung Quốc.", tag: "HSK 2" }
+                    ],
+                    grammar: [
+                        { title: "Biểu thị sự hoàn thành với 了 (Le)", structure: "Động từ + 了", explanation: "Diễn tả hành động đã thực hiện.", example: "我吃了早餐。(Tôi đã ăn sáng rồi.)" }
+                    ],
+                    quiz: [
+                        { question: "'旅游' (Lǚyóu) nghĩa là gì?", options: ["Học tập", "Du lịch", "Làm việc", "Nấu ăn"], answer: 1 }
+                    ]
+                },
+                hsk3: {
+                    vocab: [
+                        { word: "健康", reading: "Jiànkāng", meaning: "Sức khỏe, khỏe mạnh", exampleOrig: "祝你身体健康！", exampleTrans: "Chúc bạn dồi dào sức khỏe!", tag: "HSK 3" }
+                    ],
+                    grammar: [
+                        { title: "Câu chữ 把 (Bǎ)", structure: "Chủ ngữ + 把 + Tân ngữ + Động từ", explanation: "Nhấn mạnh sự tác động đến tân ngữ.", example: "请把门打开。(Hãy mở cửa ra.)" }
+                    ],
+                    quiz: [
+                        { question: "Cấu trúc câu chữ 把 dùng để làm gì?", options: ["Hỏi đường", "Nhấn mạnh sự tác động biến đổi tân ngữ", "Phủ định", "So sánh"], answer: 1 }
+                    ]
+                },
+                hsk4: {
+                    vocab: [
+                        { word: "成功", reading: "Chénggōng", meaning: "Thành công", exampleOrig: "经过努力，他终于成功了。", exampleTrans: "Nỗ lực giúp anh ấy thành công.", tag: "HSK 4" }
+                    ],
+                    grammar: [
+                        { title: "Liên từ 既然...就...", structure: "既然 + Điều kiện, 就 + Kết quả", explanation: "Đã... thì...", example: "既然你来了，就多玩几天吧。" }
+                    ],
+                    quiz: [
+                        { question: "Từ '成功' có nghĩa là:", options: ["Thất bại", "Thành công", "C cố gắng", "Bắt đầu"], answer: 1 }
+                    ]
+                },
+                hsk5: {
+                    vocab: [
+                        { word: "频繁", reading: "Pínfán", meaning: "Thường xuyên, dồn dập", exampleOrig: "两地交流越来越频繁。", exampleTrans: "Giao lưu hai nơi ngày càng dồn dập.", tag: "HSK 5" }
+                    ],
+                    grammar: [
+                        { title: "Liên từ 不免 (Bùmiǎn)", structure: "Chủ ngữ + 不免 + V/Adj", explanation: "Không tránh khỏi...", example: "第一次上台，他不免有些紧张。" }
+                    ],
+                    quiz: [
+                        { question: "'频繁' (Pínfán) nghĩa là:", options: ["Hiếm khi", "Thường xuyên, dồn dập", "Chậm trễ", "Bình thường"], answer: 1 }
+                    ]
+                },
+                hsk6: {
+                    vocab: [
+                        { word: "博大精深", reading: "Bódà jīngshēn", meaning: "Rộng lớn tinh sâu (Văn hóa, tri thức)", exampleOrig: "中国文化博大精深。", exampleTrans: "Văn hóa Trung Hoa rộng lớn tinh sâu.", tag: "HSK 6" }
+                    ],
+                    grammar: [
+                        { title: "Thành ngữ làm vị ngữ", structure: "Chủ ngữ + 成语", explanation: "Đặc tả tính chất súc tích.", example: "这个理论博大精深。" }
+                    ],
+                    quiz: [
+                        { question: "Thành ngữ '博大精深' dùng khen điều gì?", options: ["Đồ ăn ngon", "Tri thức / Văn hóa sâu rộng", "Ngoại hình đẹp", "Tốc độ nhanh"], answer: 1 }
+                    ]
+                }
+            }
+        };
+
+        // Application State
+        let currentUser = null;
+        let currentLang = 'jp';
+        let currentLevel = 'n5';
+        let currentTab = 'vocab';
+
+        let vocabIndex = 0;
+        let isFlipped = false;
+        
+        let quizIndex = 0;
+        let quizScore = 0;
+        let quizAnswered = false;
+
+        // On Page Load
+        window.onload = () => {
+            initTheme();
+            renderSidebar();
+            selectLanguageAndLevel('jp', 'n5');
+
+            // Check mock saved user session
+            const savedUser = localStorage.getItem('lingua_user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                updateAuthUI();
+            }
+        };
+
+        // ------------------------------
+        // 0. Auth Logic (Google Sign-In Mock/State)
+        // ------------------------------
+        function handleGoogleLogin() {
+            // Simulated real Google Auth flow for fast preview
+            currentUser = {
+                name: "Nguyễn Văn Học Viên",
+                email: "hocvien.lingua@gmail.com",
+                avatar: "https://placehold.co/100x100/4f46e5/ffffff?text=NV"
+            };
+            localStorage.setItem('lingua_user', JSON.stringify(currentUser));
+            updateAuthUI();
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            localStorage.removeItem('lingua_user');
+            updateAuthUI();
+        }
+
+        function updateAuthUI() {
+            const outBox = document.getElementById('sidebar-auth-logged-out');
+            const inBox = document.getElementById('sidebar-auth-logged-in');
+            const headerAuthBtn = document.getElementById('header-auth-btn');
+
+            if (currentUser) {
+                outBox.classList.add('hidden');
+                inBox.classList.remove('hidden');
+
+                document.getElementById('sidebar-user-avatar').src = currentUser.avatar;
+                document.getElementById('sidebar-user-name').textContent = currentUser.name;
+                document.getElementById('sidebar-user-email').textContent = currentUser.email;
+
+                headerAuthBtn.innerHTML = `
+                    <div class="flex items-center space-x-2 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/20">
+                        <img src="${currentUser.avatar}" class="w-6 h-6 rounded-full border border-white shrink-0">
+                        <span class="text-xs font-bold text-white truncate max-w-[100px]">${currentUser.name}</span>
+                        <button onclick="handleLogout()" class="text-rose-300 hover:text-rose-100 ml-1 text-xs"><i class="ph-bold ph-sign-out"></i></button>
+                    </div>
+                `;
+            } else {
+                outBox.classList.remove('hidden');
+                inBox.classList.add('hidden');
+
+                headerAuthBtn.innerHTML = `
+                    <button onclick="handleGoogleLogin()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/20 flex items-center space-x-2 transition-all">
+                        <i class="ph-bold ph-google-logo text-sm text-amber-400"></i>
+                        <span>Đăng nhập</span>
+                    </button>
+                `;
+            }
+        }
+
+        // ------------------------------
+        // 1. Theme Management
+        // ------------------------------
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                updateThemeUI(true);
+            } else {
+                document.documentElement.classList.remove('dark');
+                updateThemeUI(false);
+            }
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateThemeUI(isDark);
+        }
+
+        function updateThemeUI(isDark) {
+            const themeIcon = document.getElementById('theme-icon');
+            const themeText = document.getElementById('theme-text');
+            const themeBadge = document.getElementById('theme-badge');
+
+            if (isDark) {
+                themeIcon.className = 'ph-bold ph-sun text-xl text-amber-400';
+                themeText.textContent = 'Giao diện Sáng';
+                themeBadge.textContent = 'ON';
+                themeBadge.className = 'text-[10px] px-2 py-0.5 rounded-full bg-indigo-500 text-white uppercase font-extrabold';
+            } else {
+                themeIcon.className = 'ph-bold ph-moon-stars text-xl text-indigo-500';
+                themeText.textContent = 'Giao diện Tối';
+                themeBadge.textContent = 'OFF';
+                themeBadge.className = 'text-[10px] px-2 py-0.5 rounded-full bg-slate-200 text-slate-600 uppercase font-extrabold';
+            }
+        }
+
+        // ------------------------------
+        // 2. Render Accordion Sidebar
+        // ------------------------------
+        function renderSidebar() {
+            const container = document.getElementById('sidebar-languages');
+            container.innerHTML = LANGUAGES_CONFIG.map(lang => `
+                <div class="lang-accordion-item rounded-2xl border border-slate-200/70 dark:border-slate-700/60 overflow-hidden transition-all bg-white dark:bg-slate-800/80">
+                    <button onclick="toggleLangAccordion('${lang.id}')" class="w-full p-3 font-bold text-sm flex items-center justify-between text-slate-800 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-700/50">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-xl">${lang.flag}</span>
+                            <span>${lang.name}</span>
+                        </div>
+                        <i id="accordion-caret-${lang.id}" class="ph-bold ph-caret-down text-sm transition-transform duration-200"></i>
+                    </button>
+
+                    <!-- Levels Container -->
+                    <div id="accordion-levels-${lang.id}" class="hidden px-2 pb-2.5 space-y-1 bg-slate-50/50 dark:bg-slate-900/30 pt-1 border-t border-slate-100 dark:border-slate-700/40">
+                        ${lang.levels.map(lvl => `
+                            <div class="level-sub-group rounded-xl overflow-hidden">
+                                <button onclick="selectLanguageAndLevel('${lang.id}', '${lvl.id}')" id="btn-lvl-${lang.id}-${lvl.id}" class="w-full py-2 px-3 text-xs font-bold flex items-center justify-between rounded-xl transition-all text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-700">
+                                    <div class="flex items-center space-x-2">
+                                        <i class="ph-bold ph-chart-bar text-indigo-500"></i>
+                                        <span>${lvl.name}</span>
+                                    </div>
+                                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-200/60 dark:bg-slate-700 text-slate-500 dark:text-slate-400 font-normal">${lvl.desc}</span>
+                                </button>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleLangAccordion(langId) {
+            const levelsDiv = document.getElementById(`accordion-levels-${langId}`);
+            const caret = document.getElementById(`accordion-caret-${langId}`);
+            
+            const isHidden = levelsDiv.classList.contains('hidden');
+            
+            // Close all
+            LANGUAGES_CONFIG.forEach(l => {
+                document.getElementById(`accordion-levels-${l.id}`).classList.add('hidden');
+                document.getElementById(`accordion-caret-${l.id}`).style.transform = 'rotate(0deg)';
+            });
+
+            if (isHidden) {
+                levelsDiv.classList.remove('hidden');
+                caret.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // ------------------------------
+        // 3. Selection & State Control
+        // ------------------------------
+        function selectLanguageAndLevel(langId, levelId) {
+            currentLang = langId;
+            currentLevel = levelId;
+
+            // Ensure accordion is open
+            const levelsDiv = document.getElementById(`accordion-levels-${langId}`);
+            const caret = document.getElementById(`accordion-caret-${langId}`);
+            levelsDiv.classList.remove('hidden');
+            caret.style.transform = 'rotate(180deg)';
+
+            // Reset selection styles
+            document.querySelectorAll('#sidebar-languages button').forEach(b => {
+                b.classList.remove('bg-indigo-50', 'dark:bg-indigo-950/60', 'text-indigo-600', 'dark:text-indigo-400', 'border-indigo-200');
+            });
+
+            const activeLvlBtn = document.getElementById(`btn-lvl-${langId}-${levelId}`);
+            if (activeLvlBtn) {
+                activeLvlBtn.classList.add('bg-white', 'dark:bg-slate-700', 'text-indigo-600', 'dark:text-indigo-400', 'shadow-sm');
+            }
+
+            // Update Header Banner
+            const langObj = LANGUAGES_CONFIG.find(l => l.id === langId);
+            const lvlObj = langObj.levels.find(lvl => lvl.id === levelId);
+
+            document.getElementById('header-flag').textContent = langObj.flag;
+            document.getElementById('header-lang-title').textContent = `${langObj.name} (${langObj.id.toUpperCase()})`;
+            document.getElementById('header-level-name').textContent = `Trình độ ${lvlObj.name} (${lvlObj.desc})`;
+
+            // Render Level Pills Bar
+            renderLevelPills(langObj);
+
+            // Reset & Reload Content
+            vocabIndex = 0;
+            isFlipped = false;
+            resetQuiz();
+            renderCurrentTab();
+        }
+
+        function renderLevelPills(langObj) {
+            const container = document.getElementById('level-pills-bar');
+            container.innerHTML = langObj.levels.map(lvl => {
+                const isActive = lvl.id === currentLevel;
+                return `
+                    <button onclick="selectLanguageAndLevel('${langObj.id}', '${lvl.id}')" class="px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all border ${
+                        isActive 
+                        ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-500/20' 
+                        : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700'
+                    }">
+                        ${lvl.name}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+
+            // Highlight Top Tabs
+            ['vocab', 'grammar', 'quiz'].forEach(t => {
+                const btn = document.getElementById(`top-tab-${t}`);
+                if (t === tab) {
+                    btn.className = "px-3.5 py-2 rounded-xl text-xs font-bold flex items-center space-x-1.5 transition-all bg-white text-slate-900 shadow-sm";
+                } else {
+                    btn.className = "px-3.5 py-2 rounded-xl text-xs font-bold flex items-center space-x-1.5 transition-all text-white/80 hover:bg-white/10";
+                }
+            });
+
+            // Toggle Sections
+            document.getElementById('section-vocab').classList.add('hidden');
+            document.getElementById('section-grammar').classList.add('hidden');
+            document.getElementById('section-quiz').classList.add('hidden');
+
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+
+            renderCurrentTab();
+        }
+
+        function renderCurrentTab() {
+            if (currentTab === 'vocab') renderVocabCard();
+            else if (currentTab === 'grammar') renderGrammar();
+            else if (currentTab === 'quiz') renderQuiz();
+        }
+
+        function getCurrentLevelData() {
+            if (CURRICULUM[currentLang] && CURRICULUM[currentLang][currentLevel]) {
+                return CURRICULUM[currentLang][currentLevel];
+            }
+            return {
+                vocab: [{ word: "N/A", reading: "N/A", meaning: "Đang cập nhật bài học", exampleOrig: "N/A", exampleTrans: "Đang cập nhật", tag: "Basic" }],
+                grammar: [{ title: "Đang cập nhật", structure: "N/A", explanation: "Nội dung cho trình độ này đang được bổ sung.", example: "N/A" }],
+                quiz: [{ question: "Nội dung quiz đang được cập nhật?", options: ["Đồng ý", "Bỏ qua"], answer: 0 }]
+            };
+        }
+
+        // ------------------------------
+        // 4. Flashcard Logic
+        // ------------------------------
+        function renderVocabCard() {
+            const data = getCurrentLevelData();
+            const list = data.vocab;
+            
+            if (vocabIndex >= list.length) vocabIndex = 0;
+            const item = list[vocabIndex];
+
+            const cardElem = document.getElementById('flashcard');
+            cardElem.classList.remove('rotate-y-180');
+            isFlipped = false;
+
+            const langObj = LANGUAGES_CONFIG.find(l => l.id === currentLang);
+            const lvlObj = langObj.levels.find(l => l.id === currentLevel);
+
+            document.getElementById('vocab-title').textContent = `Thẻ Từ Vựng - ${lvlObj.name}`;
+            document.getElementById('vocab-counter').textContent = `${vocabIndex + 1} / ${list.length}`;
+            
+            document.getElementById('card-tag').textContent = item.tag || lvlObj.name;
+            document.getElementById('card-word').textContent = item.word;
+            document.getElementById('card-reading').textContent = item.reading;
+            document.getElementById('card-meaning').textContent = item.meaning;
+
+            document.getElementById('card-example-orig').textContent = item.exampleOrig;
+            document.getElementById('card-example-trans').textContent = item.exampleTrans;
+        }
+
+        function flipCard() {
+            const cardElem = document.getElementById('flashcard');
+            isFlipped = !isFlipped;
+            if (isFlipped) cardElem.classList.add('rotate-y-180');
+            else cardElem.classList.remove('rotate-y-180');
+        }
+
+        function nextCard() {
+            const list = getCurrentLevelData().vocab;
+            vocabIndex = (vocabIndex + 1) % list.length;
+            renderVocabCard();
+        }
+
+        function prevCard() {
+            const list = getCurrentLevelData().vocab;
+            vocabIndex = (vocabIndex - 1 + list.length) % list.length;
+            renderVocabCard();
+        }
+
+        // ------------------------------
+        // 5. Speech Synthesis
+        // ------------------------------
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const langObj = LANGUAGES_CONFIG.find(l => l.id === currentLang);
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = langObj.langCode;
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert("Trình duyệt không hỗ trợ đọc âm thanh.");
+            }
+        }
+
+        function speakCurrentWord() {
+            const list = getCurrentLevelData().vocab;
+            speakText(list[vocabIndex].word);
+        }
+
+        function speakExample() {
+            const list = getCurrentLevelData().vocab;
+            speakText(list[vocabIndex].exampleOrig);
+        }
+
+        // ------------------------------
+        // 6. Grammar Logic
+        // ------------------------------
+        function renderGrammar() {
+            const data = getCurrentLevelData();
+            const list = data.grammar;
+            const container = document.getElementById('grammar-list');
+
+            const langObj = LANGUAGES_CONFIG.find(l => l.id === currentLang);
+            const lvlObj = langObj.levels.find(l => l.id === currentLevel);
+
+            document.getElementById('grammar-title').textContent = `Ngữ Pháp Trọng Tâm - ${lvlObj.name}`;
+
+            container.innerHTML = list.map((g, index) => `
+                <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-slate-200/80 dark:border-slate-700 shadow-sm hover:shadow-md transition-all space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <span class="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 font-bold text-sm flex items-center justify-center border border-indigo-100 dark:border-indigo-900/50">
+                            ${index + 1}
+                        </span>
+                        <h3 class="font-bold text-slate-800 dark:text-slate-100 text-lg">${g.title}</h3>
+                    </div>
+                    
+                    <div class="bg-slate-50 dark:bg-slate-900/80 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-700/60 font-mono text-sm font-semibold text-indigo-600 dark:text-indigo-400">
+                        ${g.structure}
+                    </div>
+
+                    <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                        ${g.explanation}
+                    </p>
+
+                    <div class="pt-2 border-t border-slate-100 dark:border-slate-700/60 text-sm">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Ví dụ:</span>
+                        <p class="font-medium text-slate-800 dark:text-slate-200">${g.example}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ------------------------------
+        // 7. Quiz Logic
+        // ------------------------------
+        function renderQuiz() {
+            const data = getCurrentLevelData();
+            const quizList = data.quiz;
+
+            const langObj = LANGUAGES_CONFIG.find(l => l.id === currentLang);
+            const lvlObj = langObj.levels.find(l => l.id === currentLevel);
+
+            document.getElementById('quiz-title').textContent = `Bài Kiểm Tra - ${lvlObj.name}`;
+
+            if (quizIndex >= quizList.length) {
+                document.getElementById('quiz-card-container').classList.add('hidden');
+                document.getElementById('quiz-result-container').classList.remove('hidden');
+                document.getElementById('quiz-final-score').textContent = `${quizScore} / ${quizList.length}`;
+                return;
+            }
+
+            document.getElementById('quiz-card-container').classList.remove('hidden');
+            document.getElementById('quiz-result-container').classList.add('hidden');
+
+            const currentQ = quizList[quizIndex];
+            document.getElementById('quiz-score-val').textContent = quizScore;
+            document.getElementById('quiz-progress-val').textContent = `${quizIndex + 1}/${quizList.length}`;
+            document.getElementById('quiz-q-tag').textContent = `Câu hỏi ${quizIndex + 1}`;
+            document.getElementById('quiz-question').textContent = currentQ.question;
+
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = currentQ.options.map((opt, idx) => `
+                <button onclick="checkAnswer(${idx})" id="quiz-opt-${idx}" class="quiz-option-btn w-full p-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-left font-semibold text-slate-700 dark:text-slate-200 hover:border-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-slate-700/60 transition-all flex items-center justify-between">
+                    <span>${opt}</span>
+                    <i class="ph-bold ph-circle text-lg text-slate-300 dark:text-slate-600"></i>
+                </button>
+            `).join('');
+
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            quizAnswered = false;
+        }
+
+        function checkAnswer(selectedIndex) {
+            if (quizAnswered) return;
+            quizAnswered = true;
+
+            const quizList = getCurrentLevelData().quiz;
+            const currentQ = quizList[quizIndex];
+
+            const feedbackElem = document.getElementById('quiz-feedback');
+            const feedbackIcon = document.getElementById('quiz-feedback-icon');
+            const feedbackText = document.getElementById('quiz-feedback-text');
+
+            const selectedBtn = document.getElementById(`quiz-opt-${selectedIndex}`);
+            const correctBtn = document.getElementById(`quiz-opt-${currentQ.answer}`);
+
+            if (selectedIndex === currentQ.answer) {
+                quizScore++;
+                selectedBtn.className = "quiz-option-btn w-full p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 font-bold text-left flex items-center justify-between";
+                selectedBtn.querySelector('i').className = "ph-fill ph-check-circle text-xl text-emerald-600 dark:text-emerald-400";
+
+                feedbackElem.className = "p-4 rounded-2xl flex items-center justify-between bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300";
+                feedbackIcon.className = "ph-fill ph-check-circle text-2xl text-emerald-600 dark:text-emerald-400";
+                feedbackText.textContent = "Chính xác! Làm tốt lắm.";
+            } else {
+                selectedBtn.className = "quiz-option-btn w-full p-4 rounded-2xl border-2 border-rose-500 bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300 font-bold text-left flex items-center justify-between";
+                selectedBtn.querySelector('i').className = "ph-fill ph-x-circle text-xl text-rose-600 dark:text-rose-400";
+
+                correctBtn.className = "quiz-option-btn w-full p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 font-bold text-left flex items-center justify-between";
+                correctBtn.querySelector('i').className = "ph-fill ph-check-circle text-xl text-emerald-600 dark:text-emerald-400";
+
+                feedbackElem.className = "p-4 rounded-2xl flex items-center justify-between bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300";
+                feedbackIcon.className = "ph-fill ph-x-circle text-2xl text-rose-600 dark:text-rose-400";
+                feedbackText.textContent = `Chưa đúng! Đáp án đúng là: ${currentQ.options[currentQ.answer]}`;
+            }
+
+            feedbackElem.classList.remove('hidden');
+            document.getElementById('quiz-score-val').textContent = quizScore;
+        }
+
+        function nextQuizQuestion() {
+            quizIndex++;
+            renderQuiz();
+        }
+
+        function resetQuiz() {
+            quizIndex = 0;
+            quizScore = 0;
+            quizAnswered = false;
+            renderQuiz();
+        }
+    </script>
+</body>
+</html>
