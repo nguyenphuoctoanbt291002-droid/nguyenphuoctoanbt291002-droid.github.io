@@ -1,34 +1,66 @@
-# Học đi ní — bản sửa lưu và đồng bộ dữ liệu
+# Học đi ní — Học lẹ đi du lịch nè
 
-## Cập nhật GitHub Pages
+Website học tiếng Nhật, tiếng Trung và từ vựng chuyên ngành xây dựng/BIM.
 
-1. Tải/giải nén gói này.
-2. Trước khi đưa `index.html` lên GitHub, mở file và tìm hai dòng:
+## Nội dung
+
+- `index.html`: toàn bộ website (HTML/CSS/JavaScript, dữ liệu từ vựng, audio qua trình duyệt/dịch vụ phát âm, tài khoản, ghi chú, tiến độ).
+- `supabase/setup.sql`: tạo bảng `public.user_learning_data` và chính sách Row Level Security (RLS).
+- `.nojekyll`: hỗ trợ GitHub Pages phục vụ tài nguyên tĩnh.
+- `.gitignore`: loại trừ file cục bộ không nên commit.
+
+## 1. Cấu hình Supabase
+
+1. Tạo project Supabase.
+2. Mở **SQL Editor → New query**.
+3. Mở `supabase/setup.sql`, sao chép toàn bộ và chạy.
+4. Trong Supabase, lấy **Project URL** và **Publishable key** (hoặc anon key legacy nếu dự án đang dùng loại đó).
+5. Mở `index.html`, tìm hai dòng:
 
    ```js
    const SUPABASE_URL='YOUR_SUPABASE_URL';
    const SUPABASE_ANON_KEY='YOUR_SUPABASE_ANON_KEY';
    ```
 
-3. Thay placeholder bằng **hai giá trị thật đang dùng trong `index.html` cũ** của repository:
-   - Project URL (`https://....supabase.co`)
-   - Publishable key (`sb_publishable_...`)
-4. Không đưa `sb_secret_...`, `service_role`, database password hoặc key bí mật vào HTML.
-5. Upload file mới đè lên `index.html` trong repository. Không cần chạy lại SQL nếu bảng `public.user_learning_data` và các policy đã được tạo thành công.
-6. Chờ GitHub Pages deploy, sau đó mở trang và nhấn Ctrl+Shift+R.
+6. Thay phần placeholder bằng Project URL và Publishable key thật của project, giữ nguyên dấu nháy.
+7. **Không bao giờ** đưa `sb_secret_...`, `service_role`, mật khẩu database hoặc access token vào HTML/GitHub.
 
-## Những điểm đã sửa
+Publishable key được thiết kế để dùng trong client-side app; quyền truy cập dữ liệu phải được giới hạn bằng RLS. SQL đi kèm tạo policy để người dùng đăng nhập chỉ đọc/ghi bản ghi có `user_id = auth.uid()`.
 
-- Lưu bản cache cục bộ ngay khi thay đổi dữ liệu; đánh dấu bản cache đang chờ đồng bộ.
-- Đồng bộ Supabase theo hàng đợi, giảm debounce xuống 300 ms.
-- Gửi lượt lưu khi tab chuyển sang nền/đóng trang (best effort).
-- Khi đăng xuất, chờ đồng bộ xong; nếu lưu thất bại thì không tự đăng xuất.
-- Khi đăng nhập lại, nếu máy chủ còn rỗng nhưng thiết bị có cache chưa đồng bộ, khôi phục cache và gửi lại.
-- Nếu tài khoản có bản ghi rỗng, có thể tick ô nhập dữ liệu hồ sơ cục bộ để đưa dữ liệu cũ lên cloud.
-- Chỉ hiển thị thông báo lưu thành công sau khi Supabase xác nhận upsert thành công.
+## 2. Đưa lên GitHub Pages
 
-## Ghi chú quan trọng
+Đưa toàn bộ nội dung trong thư mục này vào thư mục gốc của repository, giữ nguyên cấu trúc:
 
-- Không xóa dữ liệu trình duyệt (localStorage) trên thiết bị từng có dữ liệu chưa đồng bộ.
-- File SQL chỉ cần chạy một lần nếu bảng và policy đã có. Nếu muốn kiểm tra lại, xem `supabase/setup.sql`.
-- Nếu dữ liệu đã mất cả trên Supabase lẫn cache cục bộ, bản sửa không thể tự khôi phục dữ liệu không còn ở đâu cả.
+```text
+repository/
+├── index.html
+├── README.md
+├── .gitignore
+├── .nojekyll
+└── supabase/
+    └── setup.sql
+```
+
+Sau đó mở **Settings → Pages → Deploy from a branch → main → /(root) → Save**.
+
+## 3. Cấu hình Authentication
+
+Trong Supabase, mở **Authentication → URL Configuration**:
+
+- Site URL: URL GitHub Pages thực tế của website.
+- Redirect URLs: thêm đúng URL website (và đường dẫn callback nếu ứng dụng yêu cầu).
+
+## 4. Kiểm tra sau triển khai
+
+1. Mở URL GitHub Pages.
+2. Tạo tài khoản test và xác nhận email nếu Supabase yêu cầu.
+3. Tạo một ghi chú test và lưu một từ vựng.
+4. Kiểm tra Table Editor, bảng `user_learning_data` có bản ghi `user_id` tương ứng.
+5. Đăng xuất/đăng nhập lại và kiểm tra dữ liệu còn nguyên.
+6. Thử tài khoản thứ hai để xác nhận dữ liệu không bị lẫn.
+
+## Lưu ý quan trọng
+
+- File HTML trong gói này để trống URL/key nhằm tránh phát tán thông tin cấu hình riêng của project. Bạn cần điền lại hai giá trị public của chính mình theo bước 1.
+- Nếu dữ liệu cũ chỉ còn trong localStorage của một trình duyệt, hãy đăng nhập trên đúng trình duyệt đó và dùng tùy chọn nhập/chuyển dữ liệu cục bộ (nếu được hỏi) trước khi xóa dữ liệu trình duyệt.
+- Gói này không chứa mật khẩu database, Secret key hoặc thông tin đăng nhập của bạn.
