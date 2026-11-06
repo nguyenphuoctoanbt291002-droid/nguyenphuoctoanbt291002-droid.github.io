@@ -64,3 +64,7 @@ Trong Supabase, mở **Authentication → URL Configuration**:
 - File HTML trong gói này để trống URL/key nhằm tránh phát tán thông tin cấu hình riêng của project. Bạn cần điền lại hai giá trị public của chính mình theo bước 1.
 - Nếu dữ liệu cũ chỉ còn trong localStorage của một trình duyệt, hãy đăng nhập trên đúng trình duyệt đó và dùng tùy chọn nhập/chuyển dữ liệu cục bộ (nếu được hỏi) trước khi xóa dữ liệu trình duyệt.
 - Gói này không chứa mật khẩu database, Secret key hoặc thông tin đăng nhập của bạn.
+
+## Cập nhật giao diện tài khoản
+
+Khi đăng nhập Supabase (bao gồm tài khoản dùng Gmail/email), khu vực **Hồ sơ riêng trên máy này** sẽ tự ẩn và khung đăng nhập mở rộng toàn chiều ngang. Khi đăng xuất, khu vực hồ sơ cục bộ tự hiện lại.

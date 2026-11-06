@@ -108,6 +108,8 @@ main{padding:29px 38px 55px;min-width:0}.topbar{display:flex;justify-content:spa
 
 /* Tài khoản, ghi chú và dữ liệu cá nhân */
 .account-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:16px}
+.account-panel[hidden]{display:none!important}
+.account-grid.cloud-signed-in{grid-template-columns:minmax(0,1fr)}
 .account-panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:19px;margin-bottom:15px}
 .account-panel h3{font-size:15px;margin:0 0 5px}.account-muted{color:var(--muted);font-size:11px;margin:0 0 13px}
 .account-field{display:grid;gap:5px;margin:10px 0}.account-field label{font-size:11px;font-weight:800;color:#5f657a}.account-field input,.account-field textarea,.account-field select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff;color:var(--ink);font:inherit;font-size:12px}.account-field textarea{min-height:92px;resize:vertical}
@@ -234,7 +236,7 @@ main{padding:29px 38px 55px;min-width:0}.topbar{display:flex;justify-content:spa
 
 <section class="page" id="account">
   <div class="page-heading"><div><h2>Tài khoản & ghi chú riêng 👤</h2><p>Mỗi người có hồ sơ học, từ đã lưu, ghi chú và tiến độ tách biệt.</p></div><span class="account-badge" id="accountModeBadge">HỒ SƠ TRÊN THIẾT BỊ</span></div>
-  <div class="account-grid">
+  <div class="account-grid" id="accountAuthGrid">
     <section class="account-panel">
       <h3>☁️ Đăng nhập và đồng bộ nhiều thiết bị</h3>
       <p class="account-muted">Đăng ký bằng email để đồng bộ ghi chú và tiến độ giữa máy tính, điện thoại.</p>
@@ -245,9 +247,9 @@ main{padding:29px 38px 55px;min-width:0}.topbar{display:flex;justify-content:spa
       <div class="account-status warn" id="cloudStatus" aria-live="polite">Chế độ hồ sơ trên thiết bị đang hoạt động. Cần cấu hình Supabase để bật tài khoản trực tuyến.</div>
       <details class="account-help"><summary style="cursor:pointer;font-weight:850;color:#6557df">Cách bật đồng bộ trực tuyến</summary><ol><li>Tạo dự án trên Supabase.</li><li>Mở SQL Editor và chạy file <code>hoc_di_ni_supabase_setup.sql</code> đi kèm.</li><li>Trong mã HTML, thay <code>SUPABASE_URL</code> và <code>SUPABASE_ANON_KEY</code> bằng Project URL và anon/publishable key.</li><li>Đưa website lên hosting HTTPS để đăng ký/đăng nhập ổn định.</li></ol><b>Quan trọng:</b> Chỉ dùng anon/publishable key ở trình duyệt; tuyệt đối không đưa service_role key vào HTML.</details>
     </section>
-    <section class="account-panel">
+    <section class="account-panel" id="localProfilePanel">
       <h3>👥 Hồ sơ riêng trên máy này</h3>
-      <p class="account-muted">Dùng khi vài người chung một máy. Mỗi hồ sơ có dữ liệu riêng trong trình duyệt này.</p>
+      <p class="account-muted">Chỉ hiển thị khi chưa đăng nhập trực tuyến. Dùng khi vài người chung một máy; mỗi hồ sơ có dữ liệu riêng trong trình duyệt này.</p>
       <div class="account-field"><label for="localProfileSelect">Chọn hồ sơ</label><select id="localProfileSelect" onchange="switchLocalProfile(this.value)"></select></div>
       <div class="account-field"><label for="localProfileName">Tạo hồ sơ mới</label><input id="localProfileName" maxlength="40" placeholder="Ví dụ: An, Bình, Chi"></div>
       <div class="account-actions"><button class="btn secondary" type="button" onclick="createLocalProfile()">＋ Tạo hồ sơ</button><button class="btn ghost" type="button" onclick="renameLocalProfile()">Đổi tên hồ sơ</button></div>
@@ -757,6 +759,13 @@ const SUPABASE_TABLE='user_learning_data';
 function isSupabaseConfigured(){return /^https:\/\/.+\.supabase\.co$/.test(SUPABASE_URL)&&SUPABASE_ANON_KEY&&!SUPABASE_ANON_KEY.includes('YOUR_')}
 function setCloudMessage(message,kind='warn'){const el=document.getElementById('cloudStatus');if(el){el.textContent=message;el.className='account-status '+kind}}
 function renderAccountPage(){
+ const isCloudSignedIn=!!cloudUser;
+ const localProfilePanel=document.getElementById('localProfilePanel');
+ const accountAuthGrid=document.getElementById('accountAuthGrid');
+ // Tài khoản trực tuyến đang đăng nhập: ẩn khu vực hồ sơ cục bộ.
+ // Khi đăng xuất: hiện lại khu vực này và trả lưới về hai cột.
+ if(localProfilePanel){localProfilePanel.hidden=isCloudSignedIn;localProfilePanel.setAttribute('aria-hidden',String(isCloudSignedIn));}
+ if(accountAuthGrid)accountAuthGrid.classList.toggle('cloud-signed-in',isCloudSignedIn);
  const badge=document.getElementById('accountModeBadge');
  if(badge)badge.textContent=cloudUser?(cloudDirty?'☁️ ĐANG LƯU…':'☁️ ĐÃ ĐỒNG BỘ'):'HỒ SƠ TRÊN THIẾT BỊ';
  const select=document.getElementById('localProfileSelect');
