@@ -818,8 +818,8 @@ function renderSpecialized(){
 // ===== TÀI KHOẢN, HỒ SƠ RIÊNG, GHI CHÚ VÀ ĐỒNG BỘ =====
 // Dán Project URL và anon/publishable key của Supabase tại đây để bật tài khoản trực tuyến.
 // KHÔNG BAO GIỜ dùng service_role key trong mã chạy trên trình duyệt.
-const SUPABASE_URL='YOUR_SUPABASE_URL';
-const SUPABASE_ANON_KEY='YOUR_SUPABASE_ANON_KEY';
+const SUPABASE_URL='https://mehvboquocxcczamaafm.supabase.co';
+const SUPABASE_ANON_KEY='sb_publishable_gtlq3sFBrQsCiCyCa0IlHQ_VUv9bSm-';
 const SUPABASE_TABLE='user_learning_data';
 function isSupabaseConfigured(){return /^https:\/\/.+\.supabase\.co$/.test(SUPABASE_URL)&&SUPABASE_ANON_KEY&&!SUPABASE_ANON_KEY.includes('YOUR_')}
 function setCloudMessage(message,kind='warn'){const el=document.getElementById('cloudStatus');if(el){el.textContent=message;el.className='account-status '+kind}}
