@@ -2,37 +2,47 @@
 
 Website học tiếng Nhật, tiếng Trung và từ vựng chuyên ngành xây dựng/BIM.
 
-## Nội dung
+## Thành phần
 
-- `index.html`: toàn bộ website (HTML/CSS/JavaScript, dữ liệu từ vựng, audio qua trình duyệt/dịch vụ phát âm, tài khoản, ghi chú, tiến độ).
-- `supabase/setup.sql`: tạo bảng `public.user_learning_data` và chính sách Row Level Security (RLS).
-- `.nojekyll`: hỗ trợ GitHub Pages phục vụ tài nguyên tĩnh.
-- `.gitignore`: loại trừ file cục bộ không nên commit.
+- `index.html`: website chính. Có kho từ vựng Nhật/Trung, Pinyin, Hiragana/Katakana, audio, câu giao tiếp, số đếm, từ vựng xây dựng/thiết kế/thi công/BIM, ôn tập và chương trình bổ trợ Minna no Nihongo 50 bài.
+- `supabase/setup.sql`: tạo bảng `public.user_learning_data` và chính sách Row Level Security (RLS) cho dữ liệu học theo từng tài khoản.
+- `.nojekyll`: cấu hình GitHub Pages.
+- `.gitignore`: bỏ qua file cục bộ không cần đưa lên GitHub.
 
-## 1. Cấu hình Supabase
+## Cập nhật cấu hình Supabase trước khi triển khai
 
-1. Tạo project Supabase.
-2. Mở **SQL Editor → New query**.
-3. Mở `supabase/setup.sql`, sao chép toàn bộ và chạy.
-4. Trong Supabase, lấy **Project URL** và **Publishable key** (hoặc anon key legacy nếu dự án đang dùng loại đó).
-5. Mở `index.html`, tìm hai dòng:
+Mở `index.html`, tìm đoạn:
 
-   ```js
-   const SUPABASE_URL='YOUR_SUPABASE_URL';
-   const SUPABASE_ANON_KEY='YOUR_SUPABASE_ANON_KEY';
-   ```
+```js
+const SUPABASE_URL='YOUR_SUPABASE_URL';
+const SUPABASE_ANON_KEY='YOUR_SUPABASE_ANON_KEY';
+const SUPABASE_TABLE='user_learning_data';
+```
 
-6. Thay phần placeholder bằng Project URL và Publishable key thật của project, giữ nguyên dấu nháy.
-7. **Không bao giờ** đưa `sb_secret_...`, `service_role`, mật khẩu database hoặc access token vào HTML/GitHub.
+Thay hai giá trị đầu bằng:
 
-Publishable key được thiết kế để dùng trong client-side app; quyền truy cập dữ liệu phải được giới hạn bằng RLS. SQL đi kèm tạo policy để người dùng đăng nhập chỉ đọc/ghi bản ghi có `user_id = auth.uid()`.
+- Project URL của Supabase (dạng `https://<project-ref>.supabase.co`).
+- Publishable key (dạng `sb_publishable_...`).
 
-## 2. Đưa lên GitHub Pages
+Chỉ dùng Publishable key ở trình duyệt. **Không bao giờ** đưa Secret key, `service_role` key, Database Password, access token hay mật khẩu cá nhân vào `index.html` hoặc GitHub.
 
-Đưa toàn bộ nội dung trong thư mục này vào thư mục gốc của repository, giữ nguyên cấu trúc:
+## Cơ sở dữ liệu Supabase
+
+Nếu dự án Supabase đã chạy `supabase/setup.sql` và bảng `public.user_learning_data` cùng các policy RLS đang hoạt động, không cần chạy lại.
+
+Nếu là dự án mới:
+
+1. Mở Supabase Dashboard → SQL Editor → New query.
+2. Dán toàn bộ nội dung `supabase/setup.sql`.
+3. Nhấn Run.
+4. Kiểm tra Table Editor có `public.user_learning_data`.
+
+## Đưa lên GitHub Pages
+
+Đặt các file/thư mục ở đúng thư mục gốc của repository:
 
 ```text
-repository/
+repository-root/
 ├── index.html
 ├── README.md
 ├── .gitignore
@@ -41,30 +51,31 @@ repository/
     └── setup.sql
 ```
 
-Sau đó mở **Settings → Pages → Deploy from a branch → main → /(root) → Save**.
+Sau đó:
 
-## 3. Cấu hình Authentication
+1. Commit các file lên nhánh `main`.
+2. GitHub repository → Settings → Pages.
+3. Source: `Deploy from a branch`.
+4. Branch: `main`; folder: `/(root)`; nhấn Save.
+5. Đợi workflow Pages hoàn tất, mở URL hiển thị tại Settings → Pages.
 
-Trong Supabase, mở **Authentication → URL Configuration**:
+## Cấu hình Authentication
+
+Trong Supabase Dashboard → Authentication → URL Configuration:
 
 - Site URL: URL GitHub Pages thực tế của website.
-- Redirect URLs: thêm đúng URL website (và đường dẫn callback nếu ứng dụng yêu cầu).
+- Redirect URLs: thêm URL GitHub Pages thực tế (có thể thêm URL kèm `/**` nếu cần đường dẫn con).
 
-## 4. Kiểm tra sau triển khai
+Lưu thay đổi. Nếu bật xác nhận email, người dùng cần xác nhận email trước khi đăng nhập.
 
-1. Mở URL GitHub Pages.
-2. Tạo tài khoản test và xác nhận email nếu Supabase yêu cầu.
-3. Tạo một ghi chú test và lưu một từ vựng.
-4. Kiểm tra Table Editor, bảng `user_learning_data` có bản ghi `user_id` tương ứng.
-5. Đăng xuất/đăng nhập lại và kiểm tra dữ liệu còn nguyên.
-6. Thử tài khoản thứ hai để xác nhận dữ liệu không bị lẫn.
+## Lưu ý dữ liệu và bảo mật
 
-## Lưu ý quan trọng
+- Mỗi tài khoản trực tuyến được lưu theo `user_id` trong bảng `user_learning_data`.
+- RLS giới hạn người dùng chỉ đọc/ghi bản ghi của chính mình.
+- Hồ sơ cục bộ trên trình duyệt khác với tài khoản trực tuyến và không tự đồng bộ thiết bị.
+- Khi cập nhật `index.html`, giữ lại đúng Project URL và Publishable key của dự án đang dùng.
+- Không chia sẻ ảnh chụp hoặc đoạn mã có chứa mật khẩu hay khóa bí mật.
 
-- File HTML trong gói này để trống URL/key nhằm tránh phát tán thông tin cấu hình riêng của project. Bạn cần điền lại hai giá trị public của chính mình theo bước 1.
-- Nếu dữ liệu cũ chỉ còn trong localStorage của một trình duyệt, hãy đăng nhập trên đúng trình duyệt đó và dùng tùy chọn nhập/chuyển dữ liệu cục bộ (nếu được hỏi) trước khi xóa dữ liệu trình duyệt.
-- Gói này không chứa mật khẩu database, Secret key hoặc thông tin đăng nhập của bạn.
+## Minna no Nihongo
 
-## Cập nhật giao diện tài khoản
-
-Khi đăng nhập Supabase (bao gồm tài khoản dùng Gmail/email), khu vực **Hồ sơ riêng trên máy này** sẽ tự ẩn và khung đăng nhập mở rộng toàn chiều ngang. Khi đăng xuất, khu vực hồ sơ cục bộ tự hiện lại.
+Website có lộ trình ôn tập bổ trợ 50 bài (Quyển I: bài 1–25; Quyển II: bài 26–50). Phần giải thích, ví dụ và câu hỏi là nội dung tự biên soạn để học song song với giáo trình hợp pháp; không phải bản sao sách hay đề thi chính thức. Nhãn N5/N4 chỉ dùng để tham chiếu lộ trình sơ cấp.
